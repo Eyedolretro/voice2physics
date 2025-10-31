@@ -6,3 +6,6 @@ whisper
 soundfile
 streamlit
 pillow
+SpeechRecognition
+pyaudio
+

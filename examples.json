@@ -1,0 +1,6 @@
+[
+    {"name": "Ressort-masse", "text": "masse 2 kg, raideur 50 N/m"},
+    {"name": "Triangle", "text": "triangle de 3 kg"},
+    {"name": "Levier", "text": "levier 5 kg"},
+    {"name": "Pendule", "text": "pendule 1 kg"}
+]

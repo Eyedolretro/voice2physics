@@ -1,21 +1,56 @@
-from sympy import symbols, Eq, solve
-
-def compute_physics(params: dict):
+def compute_physics(params):
     """
-    Calcule les valeurs physiques de base pour un système masse-ressort.
-    Retourne un dictionnaire avec formule et résultat.
+    Effectue les calculs physiques selon le type de système.
+    Types supportés : ressort, triangle, levier, pendule
     """
-    m_val = params.get("m", 1.0)   # kg
-    k_val = params.get("k", 10.0)  # N/m
+    m = params.get("m", 1.0)
+    k = params.get("k", 1.0)
+    system_type = params.get("type", "ressort")
 
-    m, k, x = symbols("m k x")
-    f = k * x
-    eq = Eq(f, m * 9.81)  # P = m*g
-    sol = solve(eq.subs({m: m_val, k: k_val}), x)
+    results = {"masse (kg)": m, "type": system_type}
+    formulas = {}
+
+    if system_type == "ressort":
+        # Exemple : F = 100 N appliquée
+        F = 100
+        x = F / k
+        results.update({
+            "raideur (N/m)": k,
+            "force appliquée (N)": F,
+            "déplacement (m)": round(x,3)
+        })
+        formulas["Loi de Hooke"] = "F = k * x"
+
+    elif system_type == "triangle":
+        # Exemple : triangle sur plan horizontal avec poids m*g
+        g = 9.81
+        W = m * g
+        results["poids (N)"] = round(W,3)
+        formulas["Poids"] = "W = m * g"
+
+    elif system_type == "levier":
+        # Exemple simple levier : F1*L1 = F2*L2
+        L1 = 1.0
+        L2 = 0.5
+        F2 = m * 9.81
+        F1 = F2 * L2 / L1
+        results.update({"F1 (N)": round(F1,3), "F2 (N)": round(F2,3), "L1 (m)": L1, "L2 (m)": L2})
+        formulas["Loi du levier"] = "F1*L1 = F2*L2"
+
+    elif system_type == "pendule":
+        # Petit pendule simple
+        g = 9.81
+        L = 1.0
+        T = 2 * 3.1416 * (L/g)**0.5
+        results.update({"longueur (m)": L, "période (s)": round(T,3)})
+        formulas["Période pendule"] = "T = 2π√(L/g)"
+
+    else:
+        results["info"] = "Système non reconnu, calculs par défaut"
     
-    return {
-        "formule": "F = k*x",
-        "masse (kg)": m_val,
-        "raideur (N/m)": k_val,
-        "déplacement (m)": float(sol[0])
-    }
+    return results, formulas
+
+def export_for_matlab(results, filename="export_matlab.json"):
+    with open(filename, "w") as f:
+        json.dump(results, f, indent=4)
+    return filename

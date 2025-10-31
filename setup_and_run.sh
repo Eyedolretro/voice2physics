@@ -1,12 +1,12 @@
 #!/bin/bash
+# =====================================================
+# Voice2Physics – Setup et lancement en un clic
+# =====================================================
 
-# Chemin projet
 PROJECT_DIR="$HOME/Documents/Projets/voice2physics"
-
-echo "➡️ Aller dans le projet..."
 cd "$PROJECT_DIR" || exit 1
 
-echo "➡️ Supprimer ancien venv..."
+echo "➡️ Supprimer l'ancien venv..."
 rm -rf venv
 
 # Vérifier pyenv
@@ -22,21 +22,22 @@ if ! pyenv versions --bare | grep -q "^3.11.8$"; then
     pyenv install 3.11.8
 fi
 
-echo "➡️ Définir Python 3.11 pour le projet..."
+# Définir Python 3.11 pour le projet
 pyenv local 3.11.8
-
 PYTHON_PATH=$(pyenv which python)
-echo "➡️ Créer le venv avec $PYTHON_PATH..."
+echo "➡️ Créer un nouveau venv avec $PYTHON_PATH..."
 $PYTHON_PATH -m venv venv
 
-echo "➡️ Activer le venv..."
+# Activer le venv
 source venv/bin/activate
+python --version
 
-echo "➡️ Mettre pip à jour..."
+# Installer les dépendances
+echo "➡️ Installation des packages..."
+brew install portaudio >/dev/null 2>&1 || echo "PortAudio déjà installé"
 pip install --upgrade pip
-
-echo "➡️ Installer les dépendances..."
 pip install -r requirements.txt
 
+# Lancer Streamlit
 echo "➡️ Lancer Streamlit..."
 streamlit run app/streamlit_app.py
