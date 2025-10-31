@@ -5,3 +5,4 @@ sympy
 whisper
 soundfile
 streamlit
+pillow
